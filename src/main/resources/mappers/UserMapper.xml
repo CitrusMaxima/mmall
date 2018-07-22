@@ -24,6 +24,17 @@
         from mmall_user
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="checkUsername" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from mmall_user
+        where username = #{username}
+    </select>
+    <select id="selectLogin" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_user
+        where username = #{username}
+        and password = #{password}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}
