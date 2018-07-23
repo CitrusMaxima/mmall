@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TokenCache {
 
+    public static final String TOKEN_PREFIX = "token_";
+    
     private static Logger logger = LoggerFactory.getLogger(TokenCache.class);
 
     private static LoadingCache<String, String> localCache = CacheBuilder.newBuilder().initialCapacity(1000)

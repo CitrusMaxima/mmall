@@ -178,4 +178,9 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <update id="updatePasswordByUsername" parameterType="java.util.Map">
+        update mmall_user
+        set password = #{passwordNew}, update_time = now()
+        where username = #{username}
+    </update>
 </mapper>
