@@ -82,6 +82,9 @@ public class UserServiceImpl implements IUserService {
                     return ServerResponse.createByErrorMessage("Email已存在");
                 }
             }
+            if (!Const.USERNAME.equals(type) && !Const.EMAIL.equals(type)) {
+                return ServerResponse.createByErrorMessage("参数错误");
+            }
         } else {
             return ServerResponse.createByErrorMessage("参数错误");
         }
