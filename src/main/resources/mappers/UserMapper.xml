@@ -39,6 +39,12 @@
         select count(1) from mmall_user
         where email = #{email}
     </select>
+    <select id="selectQuestionByUsername" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        question
+        from mmall_user
+        where username = #{username}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}
