@@ -92,7 +92,7 @@ public class UserController {
     }
 
     /**
-     * 获取找回密码提示问题
+     * 找回密码问题校验
      *
      * @param username
      * @return
@@ -101,6 +101,10 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> forgetGetQuestion(String username) {
         return iUserService.selectQuestion(username);
+    }
+
+    public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
+        return iUserService.forgetCheckAnswer(username, question, answer);
     }
 
 }
