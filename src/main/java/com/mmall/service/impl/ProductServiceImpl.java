@@ -227,10 +227,10 @@ public class ProductServiceImpl implements IProductService {
             ProductListVo productListVo = assembleProductListVo(product);
             productListVoList.add(productListVo);
         }
-        
+
         PageInfo pageInfo = new PageInfo(productList);
         pageInfo.setList(productListVoList);
-        
+
         return ServerResponse.createBySuccess(pageInfo);
     }
 }
