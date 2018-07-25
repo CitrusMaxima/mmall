@@ -21,6 +21,22 @@ public class CartController {
     private ICartService iCartService;
 
     /**
+     * 查询购物车
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/list.do")
+    @ResponseBody
+    public ServerResponse<CartVo> list(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.list(user.getId());
+    }
+
+    /**
      * 添加到购物车
      *
      * @param session
