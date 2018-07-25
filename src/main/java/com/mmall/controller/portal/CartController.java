@@ -55,4 +55,21 @@ public class CartController {
         }
         return iCartService.update(user.getId(), productId, count);
     }
+
+    /**
+     * 删除购物车商品
+     *
+     * @param session
+     * @param productIds
+     * @return
+     */
+    @RequestMapping("/delect_product.do")
+    @ResponseBody
+    public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.deleteProduct(user.getId(), productIds);
+    }
 }

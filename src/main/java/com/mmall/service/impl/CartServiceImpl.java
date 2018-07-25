@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
@@ -69,6 +70,18 @@ public class CartServiceImpl implements ICartService {
         cartMapper.updateByPrimaryKeySelective(cart);
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
+    }
+
+    @Override
+    public ServerResponse<CartVo> deleteProduct(Integer userId, String productIds) {
+        List<String> productList = Splitter.on(",").splitToList(productIds);
+        if (CollectionUtils.isEmpty(productList)) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        cartMapper.deleteByUserIdProductIds(userId, productList);
+        CartVo cartVo = this.getCartVoLimit(userId);
+        return ServerResponse.createBySuccess(cartVo);
+
     }
 
     private CartVo getCartVoLimit(Integer userId) {
