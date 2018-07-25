@@ -63,7 +63,7 @@ public class CartController {
      * @param productIds
      * @return
      */
-    @RequestMapping("/delect_product.do")
+    @RequestMapping("/delete_product.do")
     @ResponseBody
     public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
