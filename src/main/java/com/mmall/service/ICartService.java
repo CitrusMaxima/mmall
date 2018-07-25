@@ -13,5 +13,5 @@ public interface ICartService {
 
     ServerResponse<CartVo> list(Integer userId);
 
-    ServerResponse<CartVo> selectOrUnselectAll(Integer userId, Integer checked);
+    ServerResponse<CartVo> selectOrUnselect(Integer userId, Integer productId, Integer checked);
 }

@@ -145,10 +145,13 @@
           update_time = now()
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="checkedOrUncheckedAllProduct" parameterType="java.util.Map">
+    <update id="checkedOrUncheckedProduct" parameterType="java.util.Map">
         update mmall_cart
-        set checked = #{checked}
+        set checked = #{checked},
         update_time = now()
         where user_id = #{userId}
+        <if test="productId != null">
+            and product_id = #{productId}
+        </if>
     </update>
 </mapper>
