@@ -88,4 +88,36 @@ public class CartController {
         }
         return iCartService.deleteProduct(user.getId(), productIds);
     }
+
+    /**
+     * 全选商品
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/select_all.do")
+    @ResponseBody
+    public ServerResponse<CartVo> selectAll(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.selectOrUnselectAll(user.getId(), Const.Cart.CHECKED);
+    }
+
+    /**
+     * 全反选商品
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/un_select_all.do")
+    @ResponseBody
+    public ServerResponse<CartVo> unSelectAll(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iCartService.selectOrUnselectAll(user.getId(), Const.Cart.UN_CHECKED);
+    }
 }
