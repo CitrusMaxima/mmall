@@ -31,6 +31,11 @@
     delete from mmall_shipping
     where id = #{id,jdbcType=INTEGER}
   </delete>
+    <delete id="deleteByShippingIdUserId" parameterType="java.util.Map">
+        delete from mmall_shipping
+        where id = #{shippingId}
+        and user_id = #{userId}
+    </delete>
     <insert id="insert" parameterType="com.mmall.pojo.Shipping" useGeneratedKeys="true" keyProperty="id">
     insert into mmall_shipping (id, user_id, receiver_name, 
       receiver_phone, receiver_mobile, receiver_province, 

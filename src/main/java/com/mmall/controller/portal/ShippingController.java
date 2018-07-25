@@ -36,4 +36,21 @@ public class ShippingController {
         }
         return iShippingService.add(user.getId(), shipping);
     }
+
+    /**
+     * 删除收获地址
+     *
+     * @param session
+     * @param shippingId
+     * @return
+     */
+    @RequestMapping("/del.do")
+    @ResponseBody
+    public ServerResponse del(HttpSession session, Integer shippingId) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.del(user.getId(), shippingId);
+    }
 }
