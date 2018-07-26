@@ -46,6 +46,13 @@
         as count
         from mmall_cart
         where user_id = #{userId}
+        and checked = 1
+    </select>
+    <select id="selectCheckedCartByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_cart
+        where user_id = #{userId}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from mmall_cart
