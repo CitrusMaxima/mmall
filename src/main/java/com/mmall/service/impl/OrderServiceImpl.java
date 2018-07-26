@@ -47,7 +47,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private OrderItemMapper orderItemMapper;
-    
+
     @Autowired
     private PayInfoMapper payInfoMapper;
 
@@ -196,11 +196,11 @@ public class OrderServiceImpl implements IOrderService {
         if (order == null) {
             return ServerResponse.createByErrorMessage("非快乐慕商城的订单，回调忽略");
         }
-        
+
         if (order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()) {
             return ServerResponse.createBySuccessMessage("支付宝重复调用");
         }
-        
+
         if (Const.AlipayCallback.TRADE_STATUS_TRADE_SUCCESS.equals(tradeStatus)) {
             order.setPaymentTime(DateTimeUtil.stringToDate(params.get("gmt_payment")));
             order.setStatus(Const.OrderStatusEnum.PAID.getCode());
@@ -217,5 +217,18 @@ public class OrderServiceImpl implements IOrderService {
 
         payInfoMapper.insert(payInfo);
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse queryOrderPayStatus(Integer userId, Long orderNo) {
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+        if (order == null) {
+            return ServerResponse.createByErrorMessage("用户没有该订单");
+        }
+
+        if (order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
     }
 }
