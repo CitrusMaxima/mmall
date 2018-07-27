@@ -55,10 +55,10 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private CartMapper cartMapper;
-    
+
     @Autowired
     private ProductMapper productMapper;
-    
+
     @Autowired
     private ShippingMapper shippingMapper;
 
@@ -74,35 +74,55 @@ public class OrderServiceImpl implements IOrderService {
         }
         List<OrderItem> orderItemList = (List<OrderItem>) serverResponse.getData();
         BigDecimal payment = this.getOrderTotalPrice(orderItemList);
-        
+
         // 生成订单
         Order order = this.assembleOrder(userId, shippingId, payment);
         if (order == null) {
             return ServerResponse.createByErrorMessage("生成订单错误");
         }
-        
-        if(CollectionUtils.isEmpty(orderItemList)) {
+
+        if (CollectionUtils.isEmpty(orderItemList)) {
             return ServerResponse.createByErrorMessage("购物车为空");
         }
-        
+
         for (OrderItem orderItem : orderItemList) {
             orderItem.setOrderNo(order.getOrderNo());
         }
-        
+
         // mybatis 批量插入
         orderItemMapper.batchInsert(orderItemList);
-        
+
         // 生成成功，减少产品库存
         this.reduceProductStock(orderItemList);
-        
+
         // 清空购物车
         cleanCart(cartList);
-        
+
         // 返回给前端数据
         OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
         return ServerResponse.createBySuccess(orderVo);
     }
-    
+
+    @Override
+    public ServerResponse<String> cancel(Integer userId, Long orderNo) {
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+        if (order == null) {
+            return ServerResponse.createByErrorMessage("该用户此订单不存在");
+        }
+        if (order.getStatus() != Const.OrderStatusEnum.NO_PAY.getCode()) {
+            return ServerResponse.createByErrorMessage("已付款，无法取消订单");
+        }
+        Order updateOrder = new Order();
+        updateOrder.setId(order.getId());
+        updateOrder.setStatus(Const.OrderStatusEnum.CANCLED.getCode());
+
+        int rowCount = orderMapper.updateByPrimaryKeySelective(updateOrder);
+        if (rowCount > 0) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
+    }
+
     private OrderVo assembleOrderVo(Order order, List<OrderItem> orderItemList) {
         OrderVo orderVo = new OrderVo();
         orderVo.setOrderNo(order.getOrderNo());
@@ -126,16 +146,16 @@ public class OrderServiceImpl implements IOrderService {
         orderVo.setEndTime(DateTimeUtil.dateToString(order.getEndTime()));
         orderVo.setCreateTime(DateTimeUtil.dateToString(order.getCreateTime()));
         orderVo.setCloseTime(DateTimeUtil.dateToString(order.getCloseTime()));
-        
+
         orderVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
-        
+
         List<OrderItemVo> orderItemVoList = Lists.newArrayList();
         for (OrderItem orderItem : orderItemList) {
             OrderItemVo orderItemVo = this.assembleOrderItemVo(orderItem);
             orderItemVoList.add(orderItemVo);
         }
         orderVo.setOrderItemVoList(orderItemVoList);
-        
+
         return orderVo;
     }
 
@@ -231,7 +251,7 @@ public class OrderServiceImpl implements IOrderService {
             if (cartItem.getQuantity() > product.getStock()) {
                 return ServerResponse.createByErrorMessage("产品" + product.getName() + "库存不足");
             }
-            
+
             orderItem.setUserId(userId);
             orderItem.setProductId(product.getId());
             orderItem.setProductName(product.getName());
@@ -239,7 +259,7 @@ public class OrderServiceImpl implements IOrderService {
             orderItem.setCurrentUnitPrice(product.getPrice());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(), cartItem.getQuantity()));
-            
+
             orderItemList.add(orderItem);
         }
         return ServerResponse.createBySuccess(orderItemList);

@@ -48,6 +48,23 @@ public class OrderController {
     }
 
     /**
+     * 取消订单
+     *
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("/cancel.do")
+    @ResponseBody
+    public ServerResponse cancel(HttpSession session, Long orderNo) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.cancel(user.getId(), orderNo);
+    }
+
+    /**
      * 支付宝支付
      *
      * @param session
