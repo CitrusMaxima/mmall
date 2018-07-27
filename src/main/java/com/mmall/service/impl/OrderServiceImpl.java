@@ -501,7 +501,8 @@ public class OrderServiceImpl implements IOrderService {
         for (Order order : orderList) {
             List<OrderItem> orderItemList = Lists.newArrayList();
             if (userId == null) {
-                // TODO 管理员查询的时候，不需要传userId
+                // 管理员查询的时候，不需要传userId
+                orderItemList = orderItemMapper.getByOrderNo(order.getOrderNo());
             } else {
                 orderItemList = orderItemMapper.getByOrderNoUserId(order.getOrderNo(), userId);
             }
@@ -509,5 +510,18 @@ public class OrderServiceImpl implements IOrderService {
             orderVoList.add(orderVo);
         }
         return orderVoList;
+    }
+
+
+    // backend
+
+    @Override
+    public ServerResponse<PageInfo> manageList(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderList = orderMapper.selectAllOrder();
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, null);
+        PageInfo pageResult = new PageInfo(orderList);
+        pageResult.setList(orderVoList);
+        return ServerResponse.createBySuccess(pageResult);
     }
 }
