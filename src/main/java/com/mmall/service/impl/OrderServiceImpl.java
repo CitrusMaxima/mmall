@@ -524,4 +524,15 @@ public class OrderServiceImpl implements IOrderService {
         pageResult.setList(orderVoList);
         return ServerResponse.createBySuccess(pageResult);
     }
+
+    @Override
+    public ServerResponse<OrderVo> manageDetail(Long orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if (order == null) {
+            return ServerResponse.createByErrorMessage("订单不存在");
+        }
+        List<OrderItem> orderItemList = orderItemMapper.getByOrderNo(orderNo);
+        OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
+        return ServerResponse.createBySuccess(orderVo);
+    }
 }
