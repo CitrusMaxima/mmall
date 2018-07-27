@@ -101,4 +101,27 @@ public class OrderManageController {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
     }
+
+    /**
+     * 后台发货
+     *
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("/send_goods.do")
+    @ResponseBody
+    public ServerResponse<String> orderSendGoods(HttpSession session, Long orderNo) {
+
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录");
+        }
+        // 校验用户是否为管理员
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iOrderService.manageSendGoods(orderNo);
+        } else {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+    }
 }

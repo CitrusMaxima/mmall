@@ -31,4 +31,6 @@ public interface IOrderService {
     ServerResponse<OrderVo> manageDetail(Long orderNo);
 
     ServerResponse<PageInfo> manageSearch(Long orderNo, int pageNum, int pageSize);
+
+    ServerResponse<String> manageSendGoods(Long orderNo);
 }
