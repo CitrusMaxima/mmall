@@ -38,12 +38,8 @@ public class UserController {
     public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         ServerResponse<User> serverResponse = iUserService.login(username, password);
         if (serverResponse.isSuccess()) {
-            // session.setAttribute(Const.CURRENT_USER, response.getData());
             CookieUtil.writeLoginToken(response, session.getId());
-            CookieUtil.readLoginToken(request);
-            CookieUtil.delLoginToken(request, response);
             RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(serverResponse.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
-            
         }
         return serverResponse;
     }
