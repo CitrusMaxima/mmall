@@ -12,6 +12,10 @@ public class Const {
 
     public static final String USERNAME = "username";
 
+    public interface RedisCacheExtime {
+        int REDIS_SESSION_EXTIME = 60 * 30; // 30分钟
+    }
+
     public interface ProductListOrderBy {
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc", "price_asc");
     }
@@ -110,7 +114,7 @@ public class Const {
             return value;
         }
     }
-    
+
     public enum PaymentTypeEnum {
         ONLINE_PAY(1, "在线支付");
 
@@ -125,7 +129,7 @@ public class Const {
         public static PaymentTypeEnum codeOf(int code) {
             for (PaymentTypeEnum paymentTypeEnum : values()) {
                 if (paymentTypeEnum.getCode() == code) {
-                     return paymentTypeEnum;
+                    return paymentTypeEnum;
                 }
             }
             throw new RuntimeException("没有找到对应的枚举");

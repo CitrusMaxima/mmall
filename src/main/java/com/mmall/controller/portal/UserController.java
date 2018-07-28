@@ -5,12 +5,17 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.CookieUtil;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.RedisPoolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -30,12 +35,13 @@ public class UserController {
      */
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> login(String username, String password, HttpSession session) {
-        ServerResponse<User> response = iUserService.login(username, password);
-        if (response.isSuccess()) {
-            session.setAttribute(Const.CURRENT_USER, response.getData());
+    public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        ServerResponse<User> serverResponse = iUserService.login(username, password);
+        if (serverResponse.isSuccess()) {
+            CookieUtil.writeLoginToken(response, session.getId());
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(serverResponse.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
         }
-        return response;
+        return serverResponse;
     }
 
     /**
@@ -165,7 +171,7 @@ public class UserController {
             return ServerResponse.createByErrorMessage("用户未登录");
         }
         user.setId(currentUser.getId());
-        ServerResponse<User> response =  iUserService.updateInformation(user);
+        ServerResponse<User> response = iUserService.updateInformation(user);
         if (response.isSuccess()) {
             session.setAttribute(Const.CURRENT_USER, response.getData());
         }
@@ -174,6 +180,7 @@ public class UserController {
 
     /**
      * 获取用户详细信息
+     *
      * @param session
      * @return
      */
@@ -182,7 +189,7 @@ public class UserController {
     public ServerResponse<User> getInformation(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), 
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),
                     "用户未登录，需要强制登录");
         }
         return iUserService.getInformation(user.getId());
