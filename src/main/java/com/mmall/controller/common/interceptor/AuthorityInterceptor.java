@@ -58,6 +58,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        log.info("权限拦截器拦截到请求，className:{}，methodName:{}，param:{}", className, methodName, requestParamBuffer.toString());
+
         User user = null;
         String loginToken = CookieUtil.readLoginToken(request);
         if (StringUtils.isNotEmpty(loginToken)) {
@@ -65,6 +67,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             user = JsonUtil.string2Obj(userJsonStr, User.class);
         }
 
+        // 上传由于富文本的控件要求，要特殊处理返回值，这里面区分是否登录以及是否有权限
         if (user == null || (user.getRole().intValue() != Const.Role.ROLE_ADMIN)) {
             // 返回false，即不会调用Controller里的方法
             response.reset();   // 这里要添加reset，否则报异常 getWriter() has already been called for this response.
