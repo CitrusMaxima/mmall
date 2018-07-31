@@ -1,17 +1,11 @@
 package com.mmall.controller.backend;
 
 import com.google.common.collect.Maps;
-import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
-import com.mmall.pojo.User;
 import com.mmall.service.IFileService;
 import com.mmall.service.IProductService;
-import com.mmall.service.IUserService;
-import com.mmall.util.CookieUtil;
-import com.mmall.util.JsonUtil;
 import com.mmall.util.PropertiesUtil;
-import com.mmall.util.RedisShardedPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,7 +160,7 @@ public class ProductManageController {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
         */
-        
+
         // 全部通过拦截器验证是否登录以及权限
         return iProductService.getProductList(pageNum, pageSize);
     }
