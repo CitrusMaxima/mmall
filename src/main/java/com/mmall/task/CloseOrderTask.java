@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class CloseOrderTask {
-    
+
     @Autowired
     private IOrderService iOrderService;
-    
+
     @Scheduled(cron = "0 */1 * * * ?")  // 每1分钟
     public void closeOrderTaskV1() {
         log.info("关闭订单定时任务启动");

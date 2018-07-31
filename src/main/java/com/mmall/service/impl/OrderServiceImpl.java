@@ -578,7 +578,7 @@ public class OrderServiceImpl implements IOrderService {
                 Product product = new Product();
                 product.setId(orderItem.getProductId());
                 product.setStock(stock + orderItem.getQuantity());
-                
+
                 productMapper.updateByPrimaryKeySelective(product);
             }
             orderMapper.closeOrderByOrderId(order.getId());
