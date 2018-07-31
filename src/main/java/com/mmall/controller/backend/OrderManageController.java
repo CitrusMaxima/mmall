@@ -1,16 +1,9 @@
 package com.mmall.controller.backend;
 
 import com.github.pagehelper.PageInfo;
-import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
-import com.mmall.pojo.User;
 import com.mmall.service.IOrderService;
-import com.mmall.service.IUserService;
-import com.mmall.util.CookieUtil;
-import com.mmall.util.JsonUtil;
-import com.mmall.util.RedisShardedPoolUtil;
 import com.mmall.vo.OrderVo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/manage/order")
 public class OrderManageController {
 
-    @Autowired
-    private IUserService iUserService;
+    // @Autowired
+    // private IUserService iUserService;
 
     @Autowired
     private IOrderService iOrderService;
@@ -42,7 +35,7 @@ public class OrderManageController {
     public ServerResponse<PageInfo> orderList(HttpServletRequest httpServletRequest,
                                               @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-
+        /*
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if (StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户的信息");
@@ -59,6 +52,10 @@ public class OrderManageController {
         } else {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
+        */
+
+        // 全部通过拦截器验证是否登录以及权限
+        return iOrderService.manageList(pageNum, pageSize);
     }
 
     /**
@@ -71,7 +68,7 @@ public class OrderManageController {
     @RequestMapping("/detail.do")
     @ResponseBody
     public ServerResponse<OrderVo> orderDetail(HttpServletRequest httpServletRequest, Long orderNo) {
-
+        /*
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if (StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户的信息");
@@ -88,6 +85,10 @@ public class OrderManageController {
         } else {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
+        */
+
+        // 全部通过拦截器验证是否登录以及权限
+        return iOrderService.manageDetail(orderNo);
     }
 
     /**
@@ -104,7 +105,7 @@ public class OrderManageController {
     public ServerResponse<PageInfo> orderSearch(HttpServletRequest httpServletRequest, Long orderNo,
                                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-
+        /*
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if (StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户的信息");
@@ -121,6 +122,10 @@ public class OrderManageController {
         } else {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
+        */
+
+        // 全部通过拦截器验证是否登录以及权限
+        return iOrderService.manageSearch(orderNo, pageNum, pageSize);
     }
 
     /**
@@ -133,7 +138,7 @@ public class OrderManageController {
     @RequestMapping("/send_goods.do")
     @ResponseBody
     public ServerResponse<String> orderSendGoods(HttpServletRequest httpServletRequest, Long orderNo) {
-
+        /*
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if (StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户的信息");
@@ -150,5 +155,9 @@ public class OrderManageController {
         } else {
             return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }
+        */
+
+        // 全部通过拦截器验证是否登录以及权限
+        return iOrderService.manageSendGoods(orderNo);
     }
 }

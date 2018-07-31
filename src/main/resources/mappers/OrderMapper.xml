@@ -50,9 +50,19 @@
         order by create_time desc
     </select>
     <select id="selectAllOrder" resultMap="BaseResultMap">
-        select 
+        select
         <include refid="Base_Column_List"/>
         from mmall_order
+        order by create_time desc
+    </select>
+    <select id="selectOrderStatusByCreateTime" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_order
+        where status = #{status}
+        <![CDATA[
+        and create_time <= #{date}
+        ]]>
         order by create_time desc
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -224,4 +234,9 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <update id="closeOrderByOrderId" parameterType="java.lang.Integer">
+        update mmall_order
+        set status = 0
+        where id = #{id}
+    </update>
 </mapper>
