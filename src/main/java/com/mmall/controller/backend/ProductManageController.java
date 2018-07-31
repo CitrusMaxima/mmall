@@ -247,6 +247,7 @@ public class ProductManageController {
         }
         // 校验用户是否为管理员
         if (iUserService.checkAdminRole(user).isSuccess()) {
+            // 富文本中对于返回值有自己的要求，我们使用的是simditor所以按照simditor的要求进行返回
             String path = request.getSession().getServletContext().getRealPath("upload");
             String targetFileName = iFileService.upload(file, path);
             if (StringUtils.isBlank(targetFileName)) {
