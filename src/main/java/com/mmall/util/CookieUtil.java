@@ -16,7 +16,7 @@ public class CookieUtil {
 
     public static void writeLoginToken(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(COOKIE_NAME, token);
-        cookie.setDomain(COOKIE_DOMAIN);
+        // cookie.setDomain(COOKIE_DOMAIN);
         cookie.setPath("/");    // 代表设置在根目录
         cookie.setHttpOnly(true);
         // 单位是秒
@@ -45,7 +45,7 @@ public class CookieUtil {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (StringUtils.equals(cookie.getName(), COOKIE_NAME)) {
-                    cookie.setDomain(COOKIE_DOMAIN);
+                    // cookie.setDomain(COOKIE_DOMAIN);
                     cookie.setPath("/");
                     cookie.setMaxAge(0);    // 设置成0，代表删除此cookie
                     log.info("delete cookieName:{}, cookieValue:{}", cookie.getName(), cookie.getValue());
