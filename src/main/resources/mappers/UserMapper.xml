@@ -70,6 +70,9 @@
         from mmall_user
         order by id asc
     </select>
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        select count(1) from mmall_user
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}

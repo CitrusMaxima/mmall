@@ -230,6 +230,11 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccess(pageResult);
     }
 
+    @Override
+    public int getUserCount() {
+        return userMapper.selectUserCount();
+    }
+
     private UserListVo assembleUserListVo(User user) {
         UserListVo userListVo = new UserListVo();
         userListVo.setId(user.getId());

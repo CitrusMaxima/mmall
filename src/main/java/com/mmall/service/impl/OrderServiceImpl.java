@@ -585,4 +585,9 @@ public class OrderServiceImpl implements IOrderService {
             log.info("关闭订单OrderNo：{}", order.getOrderNo());
         }
     }
+
+    @Override
+    public int getOrderCount() {
+        return orderMapper.selectOrderCount();
+    }
 }
